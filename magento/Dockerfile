@@ -16,14 +16,7 @@ RUN openssl req -x509 -nodes -days 999 -newkey rsa:2048 \
 
 COPY ./assets/sites/default-ssl.conf /etc/apache2/sites-available/
 
-
-# Apache Server setup
-
-RUN cd /etc/apache2/sites-available \
-    && a2enmod ssl \
-    && a2enmod rewrite \
-    && a2ensite default-ssl \
-    && service apache2 restart
+# SSL Setup
 
 # Server setup
 
@@ -65,13 +58,30 @@ realpath_cache_size=10M
 realpath_cache_ttl=7200
 EOF
 
+# Configure PHP ini
+
+# Apache Server setup
+
+RUN cd /etc/apache2/sites-available \
+    && a2enmod ssl \
+    && a2enmod rewrite \
+    && a2ensite default-ssl \
+    && service apache2 restart
+
+# Apache Server setup
+
+
+# Magento preparation & installtion
+
 WORKDIR /var/www/html/
 
 # Composer installtion
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
+# Add Composer Auth keys
 RUN composer global config http-basic.repo.magento.com ${Magento_Key_Public} ${Magento_Key_Private}
 
+# 1. Get the metapackage
 RUN composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition=${Magento_Version} .
 
 # Magento Auth keys
@@ -86,8 +96,11 @@ RUN cat > auth.json <<EOF
 }
 EOF
 
-
+# 2. Set file permissions
 RUN find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} + \
     && find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} + \
     && chown -R :www-data . \
     && chmod u+x bin/magento
+
+# 3. Install Magento
+# Run setup_magneto.sh from inside the container (/usr/local/bin/magento/)
