@@ -38,8 +38,11 @@ bin/magento sampledata:deploy
 mkdir pub/media/catalog/product/cache
 chmod g+ws pub/media/catalog/product/cache
 
+
+echo "------- Magento Applying changes -------"
+
 bin/magento setup:upgrade
 bin/magento c:f
 
 
-echo "Setup Magento Done"
+echo "------- Setup Magento Done -------"
