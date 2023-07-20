@@ -1,5 +1,3 @@
-version: '2'
-
 name: pt-magento2
 
 services:
