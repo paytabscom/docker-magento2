@@ -1,0 +1,68 @@
+name: pt-magento2
+
+services:
+
+  magento:
+    container_name: pt-magento2-site
+    build:
+      context: ./magento
+      args:
+        Magento_Version:
+        Magento_Key_Public:
+        Magento_Key_Private:
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      DB_HOST: mariadb
+      DB_NAME: magento
+      DB_USER: magento
+      DB_PASSWORD:
+      ELASTICSEARCH_HOST: elasticsearch
+      ELASTICSEARCH_PORT_NUMBER: 9200
+    env_file:
+      - magento.env
+    volumes:
+      - site:/var/www/html
+      - ./magento/scripts:/usr/local/bin/magento:ro
+      - ../paytabs-magento2.x:/var/www/html/app/code/PayTabs/PayPage:rw
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+
+  mariadb:
+    image: mariadb:${MariadbTag}
+    container_name: pt-magento2-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: magento
+      MYSQL_USER: magento
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "--silent" ]
+      interval: 5s
+      timeout: 60s
+      retries: 5
+      start_period: 30s
+
+  elasticsearch:
+    image: elasticsearch:${ElasticsearchTag}
+    container_name: pt-magento2-elasticsearch
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+    healthcheck:
+      test: curl -s http://elasticsearch:9200 >/dev/null || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  site:
+  db:
