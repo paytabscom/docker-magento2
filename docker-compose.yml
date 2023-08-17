@@ -1,9 +1,9 @@
-name: pt-magento2
+name: ${Name}
 
 services:
 
   magento:
-    container_name: pt-magento2-site
+    container_name: ${Name}-site
     build:
       context: ./magento
       args:
@@ -34,7 +34,7 @@ services:
 
   mariadb:
     image: mariadb:${MariadbTag}
-    container_name: pt-magento2-db
+    container_name: ${Name}-db
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: magento
@@ -51,7 +51,7 @@ services:
 
   elasticsearch:
     image: elasticsearch:${ElasticsearchTag}
-    container_name: pt-magento2-elasticsearch
+    container_name: ${Name}-elasticsearch
     environment:
       - discovery.type=single-node
     ports:
