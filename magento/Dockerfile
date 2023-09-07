@@ -1,4 +1,6 @@
-FROM wajihkm/pt-php8.2:1
+ARG PHP_Version
+
+FROM wajihkm/pt-php${PHP_Version}:1
 
 ARG Magento_Version
 ARG Magento_Key_Public
@@ -13,6 +15,8 @@ RUN cat > /usr/local/etc/php/conf.d/docker-php-ext-magento.ini <<EOF
 memory_limit=2G
 realpath_cache_size=10M
 realpath_cache_ttl=7200
+max_input_vars=3000
+upload_max_filesize=100M
 EOF
 
 # Configure PHP ini
