@@ -49,4 +49,6 @@ RUN find var generated vendor pub/static pub/media app/etc -type f -exec chmod g
     && chmod u+x bin/magento
 
 # 3. Install Magento
-# Run setup_magneto.sh from inside the container (/usr/local/bin/magento/)
+COPY ./scripts/setup_magento.sh /usr/local/bin/magento/
+RUN chmod +x /usr/local/bin/magento/*.sh \
+   && /usr/local/bin/magento/setup_magento.sh

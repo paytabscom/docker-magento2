@@ -27,8 +27,13 @@ echo "------- Setup Magento Configure -------"
 
 bin/magento module:disable Magento_AdminAdobeImsTwoFactorAuth
 bin/magento module:disable Magento_TwoFactorAuth
+
+# Password lifetime forever
 bin/magento config:set admin/security/password_lifetime 0
 bin/magento config:set admin/security/password_is_forced 0
+
+# Increase the Admin session lifetime to 1 day
+bin/magento config:set admin/security/session_lifetime 86400
 
 
 echo "------- Deploy Magento Sample data -------"
