@@ -12,7 +12,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 # Configure PHP ini
 
 RUN cat > /usr/local/etc/php/conf.d/docker-php-ext-magento.ini <<EOF
-memory_limit=2G
+memory_limit=3G
 realpath_cache_size=10M
 realpath_cache_ttl=7200
 max_input_vars=3000
@@ -49,6 +49,12 @@ RUN find var generated vendor pub/static pub/media app/etc -type f -exec chmod g
     && chmod u+x bin/magento
 
 # 3. Install Magento
+
+# 3.1. Copy installation files
 COPY ./scripts/setup_magento.sh /usr/local/bin/magento/
-RUN chmod +x /usr/local/bin/magento/*.sh \
-   && /usr/local/bin/magento/setup_magento.sh
+
+# 3.2. Add executable permission 
+RUN chmod +x /usr/local/bin/magento/*.sh
+
+# 3.3. Run after starting all containers
+# /usr/local/bin/magento/setup_magento.sh
