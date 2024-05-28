@@ -63,6 +63,16 @@ services:
       retries: 5
       start_period: 30s
 
+  ngrok:
+    container_name: ${Name}-ngrok
+    image: ngrok/ngrok:latest
+    environment:
+      NGROK_AUTHTOKEN: '${NGROK_AUTH}'
+      PORT: 443
+    command: 'http --host-header=rewrite prestashop'
+    ports:
+      - 4040:4040
+
 volumes:
   site:
   db:
