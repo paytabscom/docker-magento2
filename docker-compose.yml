@@ -69,7 +69,7 @@ services:
     environment:
       NGROK_AUTHTOKEN: '${NGROK_AUTH}'
       PORT: 443
-    command: 'http --host-header=rewrite prestashop'
+    command: 'http --host-header=rewrite magento'
     ports:
       - 4040:4040
 
