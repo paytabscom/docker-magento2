@@ -13,7 +13,7 @@ services:
         Magento_Key_Private:
     ports:
       # - 80:80
-      - 443:443
+      - ${SITE_443}:443
     environment:
       DB_HOST: mariadb
       DB_NAME: magento
@@ -40,6 +40,8 @@ services:
       MYSQL_DATABASE: magento
       MYSQL_USER: magento
       MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - ${DB_3306}:3306
     volumes:
       - db:/var/lib/mysql
     healthcheck:
@@ -71,7 +73,7 @@ services:
       PORT: 443
     command: 'http --host-header=rewrite magento'
     ports:
-      - 4040:4040
+      - ${NGROK_4040}:4040
 
 volumes:
   site:
