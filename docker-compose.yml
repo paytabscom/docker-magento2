@@ -1,5 +1,11 @@
 name: ${Name}
 
+include:
+  - path: docker-common/mariadb.yml
+    env_file: docker-common/mariadb.env
+  - path: docker-common/ngrok.yml
+    env_file: docker-common/ngrok.env
+
 services:
 
   magento:
@@ -12,13 +18,13 @@ services:
         Magento_Key_Public:
         Magento_Key_Private:
     ports:
-      # - 80:80
+      # - ${SITE_80}:80
       - ${SITE_443}:443
     environment:
       DB_HOST: mariadb
-      DB_NAME: magento
-      DB_USER: magento
-      DB_PASSWORD:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
       ELASTICSEARCH_HOST: elasticsearch
       ELASTICSEARCH_PORT_NUMBER: 9200
     env_file:
@@ -31,25 +37,6 @@ services:
         condition: service_healthy
       elasticsearch:
         condition: service_healthy
-
-  mariadb:
-    image: mariadb:${MariadbTag}
-    container_name: ${Name}-db
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: magento
-      MYSQL_USER: magento
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - ${DB_3306}:3306
-    volumes:
-      - db:/var/lib/mysql
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "--silent" ]
-      interval: 5s
-      timeout: 60s
-      retries: 5
-      start_period: 30s
 
   elasticsearch:
     image: elasticsearch:${ElasticsearchTag}
@@ -65,16 +52,5 @@ services:
       retries: 5
       start_period: 30s
 
-  ngrok:
-    container_name: ${Name}-ngrok
-    image: ngrok/ngrok:latest
-    environment:
-      NGROK_AUTHTOKEN: '${NGROK_AUTH}'
-      PORT: 443
-    command: 'http --host-header=rewrite magento'
-    ports:
-      - ${NGROK_4040}:4040
-
 volumes:
   site:
-  db:
