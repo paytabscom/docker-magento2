@@ -43,8 +43,8 @@ services:
     container_name: ${Name}-elasticsearch
     environment:
       - discovery.type=single-node
-    # ports:
-    #   - 9200:9200
+    ports:
+      - 9200:9200
     healthcheck:
       test: curl -s http://elasticsearch:9200 >/dev/null || exit 1
       interval: 10s

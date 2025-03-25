@@ -12,7 +12,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 # Configure PHP ini
 
 RUN cat > /usr/local/etc/php/conf.d/docker-php-ext-magento.ini <<EOF
-memory_limit=3G
+memory_limit=8G
 realpath_cache_size=10M
 realpath_cache_ttl=7200
 max_input_vars=3000
@@ -28,7 +28,11 @@ EOF
 RUN composer global config http-basic.repo.magento.com ${Magento_Key_Public} ${Magento_Key_Private}
 
 # 1. Get the metapackage
-RUN composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition=${Magento_Version} .
+RUN composer create-project \
+  --no-interaction \
+  --no-install \
+  --repository-url=https://repo.magento.com/ \
+  magento/project-community-edition=${Magento_Version} .
 
 # Magento Auth keys
 RUN cat > auth.json <<EOF
@@ -41,6 +45,8 @@ RUN cat > auth.json <<EOF
   }
 }
 EOF
+
+RUN composer install
 
 # 2. Set file permissions
 RUN find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} + \
