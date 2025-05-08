@@ -22,7 +22,7 @@ EOF
 # Configure PHP ini
 
 
-# Magento preparation & installtion
+# Magento preparation & installation
 
 # Add Composer Auth keys
 RUN composer global config http-basic.repo.magento.com ${Magento_Key_Public} ${Magento_Key_Private}
