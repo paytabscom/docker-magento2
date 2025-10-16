@@ -1,6 +1,6 @@
-ARG PHP_Version
+ARG PHP_Tag
 
-FROM wajihkm/pt-php${PHP_Version}:latest
+FROM wajihkm/php:${PHP_Tag}
 
 ARG Magento_Version
 ARG Magento_Key_Public

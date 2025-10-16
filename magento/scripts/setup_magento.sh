@@ -18,9 +18,9 @@ bin/magento setup:install \
 --currency=${Magento_Currency} \
 --timezone=Asia/Dubai \
 --use-rewrites=1 \
---search-engine=elasticsearch7 \
---elasticsearch-host=${ELASTICSEARCH_HOST} \
---elasticsearch-port=${ELASTICSEARCH_PORT_NUMBER}
+--search-engine=${Search_Engine} \
+--${Search_Engine}-host=${Search_Engine_HOST} \
+--${Search_Engine}-port=${Search_Engine_PORT}
 
 
 echo "------- Setup Magento Configure -------"
