@@ -1,0 +1,14 @@
+services:
+  elasticsearch:
+    image: elasticsearch:${ElasticsearchTag}
+    container_name: ${Name}-elasticsearch
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:${Search_Engine_PORT}
+    healthcheck:
+      test: curl -s http://elasticsearch:9200 >/dev/null || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
