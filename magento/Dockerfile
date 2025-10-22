@@ -50,9 +50,9 @@ RUN composer install
 
 # 2. Set file permissions
 RUN find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} + \
-    && find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} + \
-    && chown -R :www-data . \
-    && chmod u+x bin/magento
+  && find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} + \
+  && chown -R :www-data . \
+  && chmod u+x bin/magento
 
 # 3. Install Magento
 
@@ -64,3 +64,9 @@ RUN chmod +x /usr/local/bin/magento/*.sh
 
 # 3.3. Run after starting all containers
 # /usr/local/bin/magento/setup_magento.sh
+
+# 4. Alias for Magento CLI
+RUN alias mage='php /var/www/html/bin/magento' \
+  && alias mage-setup='mage s:up' \
+  && alias mage-cache-clean='mage c:c' \
+  && alias mage-cache-flush='mage c:f'
