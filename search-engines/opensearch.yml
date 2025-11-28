@@ -1,7 +1,7 @@
 services:
   opensearch-node1:
     image: opensearchproject/opensearch:latest
-    container_name: opensearch-node1
+    container_name: ${Name}-opensearch-node1
     environment:
       - cluster.name=opensearch-cluster # Name the cluster
       - node.name=opensearch-node1 # Name the node that will run in this container

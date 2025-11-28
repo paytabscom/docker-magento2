@@ -27,7 +27,7 @@ EOF
 # Add Composer Auth keys
 RUN composer global config http-basic.repo.magento.com ${Magento_Key_Public} ${Magento_Key_Private}
 
-# 1. Get the metapackage
+# 1. Get the meta package
 RUN composer create-project \
   --no-interaction \
   --no-install \
